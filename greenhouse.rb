@@ -23,26 +23,8 @@ end
 
 
 
-def something(teams, depth = 1)
-
-      team[:jobs].each do |job|
-      until i > depth + 1
-      str = str + '-'
-      i = i + 1
-    end
-    puts "#{str} #{job[:title]}"
-    end
-  if !team[:child_ids].empty?
-    something(team, teams, depth += 1)
-  else
-    break
-  end
-
-end
-
-
 def getTeams(dept, teams, depth = 1)
-	i = 1
+  		i = 1
   str = ''
   if !dept[:child_ids].empty?
         dept[:child_ids].each do |child|
@@ -55,18 +37,13 @@ def getTeams(dept, teams, depth = 1)
 
     	if !team[:child_ids].empty? || !team[:jobs].empty?
 	    	puts "#{str} #{team[:name]}"
-
-		  end
+		end
       	if team[:child_ids].empty? && !team[:jobs].empty?
-
-
-	  	    getJobs(team, depth += 1)
+	  	    getJobs(team, depth)
         end
 
-		if !team[:child_ids].empty?
-          getTeams(team, teams, depth += 1)
-        else
-          break
+		if !team[:child_ids].empty? && team[:jobs].empty?
+           getTeams(team, teams, depth += 1)
         end
 	end
 	end
@@ -87,17 +64,17 @@ def getJobs(team, depth = 2)
 		  i = i + 1
 		end
     team[:jobs].each do |job|
-      puts "#{str} JOB #{job[:title]}"
+      puts "#{str}> #{job[:title]}"
     end
   end
 end
 
-depts.each do |dept|
-  if !dept[:child_ids].empty?
-    puts dept[:name]
-      getTeams(dept, teams)
-  end
-end
+    depts.each do |dept|
+      if !dept[:child_ids].empty?
+	      puts dept[:name]
+	        getTeams(dept, teams)
+      end
+    end
 
 
-puts
+    puts
