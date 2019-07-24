@@ -352,7 +352,7 @@ def getTeamsNew(depts, dept, depth = 0, ids = [])
     i = i + 1
   end
 
-  if !dept[:child_ids].empty? &&
+  if !dept[:child_ids].empty?
     dept[:child_ids].each do |childId|
       depts.each do |deptRow|
         if deptRow[:id] == childId
