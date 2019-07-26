@@ -13,16 +13,22 @@ data2 = [:departments, [{:id=>4035465002, :name=>"Alliances", :parent_id=>401104
     depth += 1
 
 
-    values = data[:jobs].inject({}) do |res, val|
-      (res[val[:title]] ||= {}).merge!(val){ |key, old, new| old || new }
-      res
+    # values = data[:jobs].inject({}) do |res, val|
+    #   (res[val[:title]] ||= {}).merge!(val){ |key, old, new| old || new }
+    #   res
+    # end
+    values = []
+
+    data[:jobs].each do |jobItem|
+      values << jobItem
     end
+
+    new_team = teams.uniq
 
     if !values.empty?
       values.each do |job|
         space = "-" * depth
-
-        output << "#{space} #{job.first} #{teams.inspect}"
+        output << "#{space} #{job.first} #{new_team.inspect}"
         # output << "#{job[1][:id]}"
         # output << "#{data[:id]} #{item[:id]}"
         # output << "<div class='job-container'><a href='/jobs/apply/#{job.first.downcase.strip.tr(' ', '-').gsub(/[^\w-]/, '')}-#{job[1][:id].to_s}'>#{job.first}</a><h6>#{job[1][:location][:name]}</h6></div>"
@@ -36,6 +42,8 @@ def show_childs(data, item, arr, result, depth = 1, teams = [])
   data.sort_by{ |item| item[:id] }.each do |data_item|
     item[:child_ids].each do |id|
       if id == data_item[:id]
+        teams << item[:id]
+
         if !data_item[:child_ids].empty? || !data_item[:jobs].empty?
           if arr.include?(data_item[:id]) == false
             space = "-" * depth
@@ -45,7 +53,8 @@ def show_childs(data, item, arr, result, depth = 1, teams = [])
         end
 
         if !data_item[:jobs].empty? && data_item[:child_ids].empty?
-         show_jobs(data_item, result, item, depth + 1, teams)
+         # show_jobs(data_item, result, item, depth + 1, teams)
+         teams = []
         end
 
         arr << data_item[:id]
